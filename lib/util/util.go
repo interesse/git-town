@@ -7,8 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-
-	"github.com/fatih/color"
 )
 
 // DoesCommandOuputContain runs the given command
@@ -93,12 +91,10 @@ func Pluralize(count, word string) string {
 
 // PrintError prints the given error message to the console.
 func PrintError(messages ...string) {
-	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
-	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	errHeaderFmt.Println("  Error")
+	BoldRed().Println("  Error")
 	for _, message := range messages {
-		errMessageFmt.Println("  " + message)
+		Red().Println("  " + message)
 	}
 	fmt.Println()
 }
