@@ -13,7 +13,7 @@ Feature: listing the configuration
     Given Git Town's main branch is configured as "main"
     And its perennial branches are configured as "qa"
     When I run `git-town config --setup` and enter "main" and ""
-    Then Git Town prints
+    Then Git Town prints:
       """
       Git Town needs to be configured
 
@@ -23,7 +23,7 @@ Feature: listing the configuration
 
       Please specify the main development branch by name or number (current value: main):
       """
-    And Git Town prints
+    And Git Town prints:
       """
       Please specify a perennial branch by name or number. Leave it blank to finish (current value: qa):
       """
