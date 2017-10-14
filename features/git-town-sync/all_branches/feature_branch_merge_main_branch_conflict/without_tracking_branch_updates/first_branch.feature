@@ -1,7 +1,7 @@
 Feature: git-town sync --all: handling merge conflicts between feature branch and main branch
 
   Background:
-    Given my repository has feature branches named "feature-1" and "feature-2"
+    Given my repository has the feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME        | FILE CONTENT      |
       | main      | remote           | main commit      | conflicting_file | main content      |
@@ -22,7 +22,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout feature-1               |
       | feature-1 | git merge --no-edit origin/feature-1 |
       |           | git merge --no-edit main             |
-    And Git Town prints the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -75,7 +75,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then Git Town runs no commands
-    And Git Town prints the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress

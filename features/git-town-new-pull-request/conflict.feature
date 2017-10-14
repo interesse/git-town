@@ -12,7 +12,7 @@ Feature: Syncing before creating the pull request
       | main    | local and remote | main commit    | conflicting_file | main_content    |
       | feature | local            | feature commit | conflicting_file | feature content |
     And I have "open" installed
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run `git-town new-pull-request`
@@ -30,7 +30,7 @@ Feature: Syncing before creating the pull request
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And Git Town prints the error:
+    And it prints the error:
       """
       To abort, run "git-town new-pull-request --abort".
       To continue after you have resolved the conflicts, run "git-town new-pull-request --continue".
@@ -58,7 +58,7 @@ Feature: Syncing before creating the pull request
   Scenario: continuing without resolving the conflicts
     When I run `git-town new-pull-request --continue`
     Then Git Town runs no commands
-    And Git Town prints the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress

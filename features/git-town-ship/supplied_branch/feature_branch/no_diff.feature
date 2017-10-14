@@ -4,7 +4,7 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
 
 
   Background:
-    Given my repository has feature branches named "empty-feature" and "other-feature"
+    Given my repository has the feature branches "empty-feature" and "other-feature"
     And the following commit exists in my repository
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |
@@ -29,6 +29,6 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
       |               | git checkout main                            |
       | main          | git checkout other-feature                   |
       | other-feature | git stash pop                                |
-    And Git Town prints the error "The branch 'empty-feature' has no shippable changes"
+    And it prints the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file

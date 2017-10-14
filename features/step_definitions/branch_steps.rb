@@ -24,7 +24,7 @@ Given(/^my repository has a feature branch named "([^"]+)" with no parent$/) do 
 end
 
 
-Given(/^my repository has( local)?( feature)?( perennial)? branches named "(.+?)"$/) do |local, feature, perennial, branch_names|
+Given(/^my repository has the( local)?( feature)?( perennial)? branches "(.+?)"$/) do |local, feature, perennial, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
     set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
@@ -33,7 +33,7 @@ Given(/^my repository has( local)?( feature)?( perennial)? branches named "(.+?)
 end
 
 
-Given(/^my repository has a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
+Given(/^(?:my repository|it) has a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
   create_branch branch_name, remote: true, start_point: parent_name
   set_parent_branch branch: branch_name, parent: parent_name
   store_branch_hierarchy_metadata

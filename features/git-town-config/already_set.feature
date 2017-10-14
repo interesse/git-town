@@ -6,7 +6,7 @@ Feature: listing the configuration
 
 
   Background:
-    Given my repository has branches named "production" and "qa"
+    Given my repository has the branches "production" and "qa"
 
 
   Scenario: everything is configured
@@ -23,7 +23,7 @@ Feature: listing the configuration
 
       Please specify the main development branch by name or number (current value: main):
       """
-    And Git Town prints:
+    And it prints:
       """
       Please specify a perennial branch by name or number. Leave it blank to finish (current value: qa):
       """
