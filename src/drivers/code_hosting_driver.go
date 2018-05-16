@@ -37,4 +37,10 @@ type CodeHostingDriver interface {
 
 	// SetAPIToken configures the driver with API token
 	SetAPIToken(apiToken string)
+
+	// GetBaseURLKey returns the git config key value that the API base url is stored under
+	GetBaseURLKey() string
+
+	// SetBaseURL configures the driver with the base URL of the API
+	SetBaseURL(baseURL string)
 }

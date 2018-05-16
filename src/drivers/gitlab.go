@@ -57,6 +57,12 @@ func (d *gitlabCodeHostingDriver) GetAPITokenKey() string {
 
 func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {}
 
+func (d *gitlabCodeHostingDriver) GetBaseURLKey() string {
+	return ""
+}
+
+func (d *gitlabCodeHostingDriver) SetBaseURL(baseURL string) {}
+
 func init() {
 	registry.RegisterDriver(&gitlabCodeHostingDriver{})
 }

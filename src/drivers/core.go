@@ -18,6 +18,7 @@ func GetActiveDriver() CodeHostingDriver {
 		})
 		if activeDriver != nil {
 			activeDriver.SetAPIToken(git.GetConfigurationValue(activeDriver.GetAPITokenKey()))
+			activeDriver.SetBaseURL(git.GetConfigurationValue(activeDriver.GetBaseURLKey()))
 		}
 	}
 	return activeDriver

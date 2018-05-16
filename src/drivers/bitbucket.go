@@ -58,6 +58,12 @@ func (d *bitbucketCodeHostingDriver) GetAPITokenKey() string {
 
 func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
 
+func (d *bitbucketCodeHostingDriver) GetBaseURLKey() string {
+	return ""
+}
+
+func (d *bitbucketCodeHostingDriver) SetBaseURL(baseURL string) {}
+
 func init() {
 	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
 }

@@ -17,6 +17,7 @@ type githubCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	apiToken   string
+	baseURL    string
 	client     *github.Client
 	owner      string
 	repository string
@@ -30,7 +31,10 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 	if d.apiToken == "" {
 		return false, "", nil
 	}
-	d.connect()
+	err := d.connect()
+	if err != nil {
+		return false, "", err
+	}
 	pullRequests, err := d.getPullRequests(branch, parentBranch)
 	if err != nil {
 		return false, "", err
@@ -54,8 +58,11 @@ func (d *githubCodeHostingDriver) GetRepositoryURL() string {
 }
 
 func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
-	d.connect()
-	err := d.updatePullRequestsAgainst(options)
+	err := d.connect()
+	if err != nil {
+		return "", err
+	}
+	err = d.updatePullRequestsAgainst(options)
 	if err != nil {
 		return "", err
 	}
@@ -89,20 +96,38 @@ func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
 	d.apiToken = apiToken
 }
 
+func (d *githubCodeHostingDriver) GetBaseURLKey() string {
+	return "git-town.github-base-url"
+}
+
+func (d *githubCodeHostingDriver) SetBaseURL(baseURL string) {
+	d.baseURL = baseURL
+}
+
 func init() {
 	registry.RegisterDriver(&githubCodeHostingDriver{})
 }
 
 // Helper
 
-func (d *githubCodeHostingDriver) connect() {
+func (d *githubCodeHostingDriver) connect() error {
 	if d.client == nil {
 		ts := oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: d.apiToken},
 		)
 		tc := oauth2.NewClient(context.Background(), ts)
-		d.client = github.NewClient(tc)
+
+		if d.baseURL == "" {
+			d.client = github.NewClient(tc)
+		} else {
+			client, err := github.NewEnterpriseClient(d.baseURL, d.baseURL, tc)
+			if err != nil {
+				return err
+			}
+			d.client = client
+		}
 	}
+	return nil
 }
 
 func (d *githubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.PullRequest) string {

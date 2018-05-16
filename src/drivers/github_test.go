@@ -76,6 +76,34 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 				Expect(defaultCommintMessage).To(Equal("my title (#1)"))
 			})
 		})
+
+		Describe("CustomBaseURL", func() {
+			It("uses the public github API if the environment variable GITHUB_BASE_URL is an empty string", func() {
+				var request *http.Request
+				httpmock.RegisterResponder("GET", currentPullRequestURL, func(req *http.Request) (*http.Response, error) {
+					request = req
+					return httpmock.NewStringResponse(200, ""), nil
+				})
+				driver.SetBaseURL("")
+				canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+				Expect(err).To(BeNil())
+				Expect(canMerge).To(BeFalse())
+				Expect(request.URL.String()).To(Equal(currentPullRequestURL))
+			})
+
+			It("uses a custom github API if the environment variable GITHUB_BASE_URL is an non-empty string", func() {
+				customPullRequestBaseURL := "https://github.example.com/repos/Originate/git-town/pulls"
+				customPullRequestURL := customPullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
+				httpmock.RegisterResponder("GET", customPullRequestURL, func(req *http.Request) (*http.Response, error) {
+                    Expect(req.URL.String()).To(Equal(customPullRequestURL))
+					return httpmock.NewStringResponse(200, ""), nil
+				})
+				driver.SetBaseURL("https://github.example.com")
+				canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+				Expect(err).To(BeNil())
+				Expect(canMerge).To(BeFalse())
+			})
+		})
 	})
 
 	Describe("MergePullRequest", func() {
@@ -91,6 +119,7 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
 			}
+			driver.SetBaseURL("")
 			driver.SetAPIToken("TOKEN")
 		})
 
